@@ -32,14 +32,21 @@ namespace random_file_generator
             }
 
             Console.WriteLine("Starting file generation");
-            for (int i = 0; i < files2generate; i++)
+            Task[] tasks = new Task[files2generate];
+            for (int i = 0; i < tasks.Length; i++)
             {
                 Console.WriteLine("Starting Thread to generate file #{0}", i);
                 // GenerateFile(20, folderPath);
-                Thread thread = new Thread(GenerateFile);
-                thread.Start();
+
+                // Thread thread = new Thread(GenerateFile);
+                // thread.Start();
+
+                tasks[i] = Task.Run(() => GenerateFile());
             }
-            Console.WriteLine("Finished Creating Threads");
+            Console.WriteLine("Waiting for Tasks to complete");
+            Task.WaitAll(tasks);
+
+            Console.WriteLine("All tasks completed");
             Console.ReadKey();
         }
 
