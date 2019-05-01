@@ -11,11 +11,11 @@ namespace random_file_generator
     class Program
     {
         static String folderPath = @".\";
-        static Int16 fileSize = 20;
+        static Int16 fileSize = 20000;
 
         static void Main(string[] args)
         {
-            var files2generate = 20;
+            var files2generate = 200;
             if (args[0] != null)
             {
                 String newPath = @args[0];
@@ -41,7 +41,7 @@ namespace random_file_generator
                 // Thread thread = new Thread(GenerateFile);
                 // thread.Start();
 
-                tasks[i] = Task.Run(() => GenerateFile());
+                tasks[i] = Task.Run(() => GenerateFile()); 
             }
             Console.WriteLine("Waiting for Tasks to complete");
             Task.WaitAll(tasks);
@@ -54,10 +54,31 @@ namespace random_file_generator
         {
             string filename = String.Format("{0}generated_{1}.txt", folderPath, Guid.NewGuid().ToString());
             var newFile = File.CreateText(filename);
+            newFile.AutoFlush = true;
+
             //TODO: Write code to put data in the file
-            Thread.Sleep(1000);
+            // Thread.Sleep(1000);
+            for (int i = 0; i < fileSize; i++)
+            {
+                newFile.Write(RandomString(1024));
+            }
 
             newFile.Close();
+        }
+
+        static string RandomString(int size, bool lowerCase = false)
+        {
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 0; i < size; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+            if (lowerCase)
+                return builder.ToString().ToLower();
+            return builder.ToString();
         }
     }
 }
