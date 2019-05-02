@@ -15,7 +15,7 @@ namespace random_file_generator
 
         static void Main(string[] args)
         {
-            var files2generate = 200;
+            var files2generate = 20;
             if (args[0] != null)
             {
                 String newPath = @args[0];
@@ -31,7 +31,8 @@ namespace random_file_generator
 
             }
 
-            Console.WriteLine("Starting file generation");
+            DateTime startTime = DateTime.Now;
+            Console.WriteLine("Starting file generation at {0}", startTime);
             Task[] tasks = new Task[files2generate];
             for (int i = 0; i < tasks.Length; i++)
             {
@@ -46,7 +47,12 @@ namespace random_file_generator
             Console.WriteLine("Waiting for Tasks to complete");
             Task.WaitAll(tasks);
 
-            Console.WriteLine("All tasks completed");
+            DateTime finishTime = DateTime.Now;
+            Console.WriteLine("All tasks completed at {0}", finishTime);
+
+            TimeSpan timeTaken = finishTime.Subtract(startTime);
+            Console.WriteLine("Process took {0}", timeTaken);
+
             Console.ReadKey();
         }
 
